@@ -1,22 +1,22 @@
 version: "3.7"
 services:
-    mysql:
-        image: mysql:latest
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_DATABASE: shareiscare
-            MYSQL_ROOT_PASSWORD: password
-            MYSQL_USER: xfers
-            MYSQL_PASSWORD: password
+    # mysql:
+    #     image: mysql:5
+    #     ports:
+    #         - "3306:3306"
+    #     environment:
+    #         MYSQL_DATABASE: shareiscare
+    #         MYSQL_ROOT_PASSWORD: password
+    #         MYSQL_USER: xfers
+    #         MYSQL_PASSWORD: password
     ruby:
         image: ruby:latest
         ports:
             - "3000:3000"
-        depends_on:
-            - mysql
+        # depends_on:
+        #     - mysql
         volumes: 
-            - .:/xfers
+            - .:/xfers:cached
             - /xfers/vendor
         environment:
             DB_HOST: mysql
@@ -24,6 +24,7 @@ services:
             DB_NAME: shareiscare
             DB_USERNAME: xfers
             DB_PASSWORD: password
+            RAILS_ENV: development
         working_dir: /xfers
         command: >
             /bin/bash -c "apt-get -qq update \
@@ -32,13 +33,26 @@ services:
                     ca-certificates \
                     curl \
                     git \
+                    rsync \
                     tzdata \
-                && curl -o /usr/local/bin/wait-for-it \
-                    https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
-                && chmod 755 /usr/local/bin/wait-for-it \
                 && gem install bundler \
+                && bundle update --bundler \
                 && time bundle install \
-                && /usr/local/bin/wait-for-it mysql:3306 --
-                    bash -c 'time bundle exec rake \
-                        db:migrate:reset' \
                 && bundle exec rails server"
+    webpacker:
+            image: node:12-alpine
+            ports:
+                - "8080:8080"
+            volumes:
+                - .:/xfers:cached
+            working_dir: /xfers
+            command: >
+                /bin/sh -c "apk --update-cache add \
+                        bash \
+                        ca-certificates \
+                        tzdata \
+                    && npm install -g \
+                        webpack \
+                        webpack-cli \
+                        webpack-dev-server \
+                    && webpack-dev-server"
