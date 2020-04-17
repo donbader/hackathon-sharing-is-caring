@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+    mysql:
+        image: mysql:latest
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: shareiscare
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_USER: xfers
+            MYSQL_PASSWORD: password
+    ruby:
+        image: ruby:latest
+        ports:
+            - "3000:3000"
+        depends_on:
+            - mysql
+        volumes: 
+            - .:/xfers
+            - /xfers/vendor
+        environment:
+            DB_HOST: mysql
+            DB_PORT: 3306
+            DB_NAME: shareiscare
+            DB_USERNAME: xfers
+            DB_PASSWORD: password
+        working_dir: /xfers
+        command: >
+            /bin/bash -c "apt-get -qq update \
+                && apt-get -qq -f -y dist-upgrade \
+                && apt-get -qq install \
+                    ca-certificates \
+                    curl \
+                    git \
+                    tzdata \
+                && curl -o /usr/local/bin/wait-for-it \
+                    https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+                && chmod 755 /usr/local/bin/wait-for-it \
+                && gem install bundler \
+                && time bundle install \
+                && /usr/local/bin/wait-for-it mysql:3306 --
+                    bash -c 'time bundle exec rake \
+                        db:migrate:reset' \
+                && bundle exec rails server"
