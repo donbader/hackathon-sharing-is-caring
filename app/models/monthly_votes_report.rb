@@ -1,0 +1,2 @@
+class MonthlyVotesReport < ApplicationRecord
+end

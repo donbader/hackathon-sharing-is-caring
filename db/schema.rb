@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_17_042243) do
+ActiveRecord::Schema.define(version: 2020_04_17_044119) do
 
   create_table "charities", force: :cascade do |t|
     t.string "name"
@@ -19,6 +19,15 @@ ActiveRecord::Schema.define(version: 2020_04_17_042243) do
     t.text "long_desc"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "monthly_votes_reports", force: :cascade do |t|
+    t.integer "charity_id_id", null: false
+    t.integer "votes_count", default: 0
+    t.date "report_month"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["charity_id_id"], name: "index_monthly_votes_reports_on_charity_id_id"
   end
 
   create_table "votes", force: :cascade do |t|
@@ -30,6 +39,7 @@ ActiveRecord::Schema.define(version: 2020_04_17_042243) do
     t.index ["voter_id"], name: "index_votes_on_voter_id"
   end
 
+  add_foreign_key "monthly_votes_reports", "charity_ids"
   add_foreign_key "votes", "charity_ids"
   add_foreign_key "votes", "voters"
 end
