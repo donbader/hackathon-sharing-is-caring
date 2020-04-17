@@ -1,0 +1,58 @@
+version: "3.7"
+services:
+    # mysql:
+    #     image: mysql:5
+    #     ports:
+    #         - "3306:3306"
+    #     environment:
+    #         MYSQL_DATABASE: shareiscare
+    #         MYSQL_ROOT_PASSWORD: password
+    #         MYSQL_USER: xfers
+    #         MYSQL_PASSWORD: password
+    ruby:
+        image: ruby:latest
+        ports:
+            - "3000:3000"
+        # depends_on:
+        #     - mysql
+        volumes: 
+            - .:/xfers:cached
+            - /xfers/vendor
+        environment:
+            DB_HOST: mysql
+            DB_PORT: 3306
+            DB_NAME: shareiscare
+            DB_USERNAME: xfers
+            DB_PASSWORD: password
+            RAILS_ENV: development
+        working_dir: /xfers
+        command: >
+            /bin/bash -c "apt-get -qq update \
+                && apt-get -qq -f -y dist-upgrade \
+                && apt-get -qq install \
+                    ca-certificates \
+                    curl \
+                    git \
+                    rsync \
+                    tzdata \
+                && gem install bundler \
+                && bundle update --bundler \
+                && time bundle install \
+                && bundle exec rails server"
+    webpacker:
+            image: node:12-alpine
+            ports:
+                - "8080:8080"
+            volumes:
+                - .:/xfers:cached
+            working_dir: /xfers
+            command: >
+                /bin/sh -c "apk --update-cache add \
+                        bash \
+                        ca-certificates \
+                        tzdata \
+                    && npm install -g \
+                        webpack \
+                        webpack-cli \
+                        webpack-dev-server \
+                    && webpack-dev-server"
