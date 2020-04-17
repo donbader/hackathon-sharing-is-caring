@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2020_04_17_044119) do
 
   create_table "votes", force: :cascade do |t|
     t.string "contact_no"
-    t.decimal "amount", precision: 10, scale: 2
+    t.decimal "amount", precision: 16, scale: 2
     t.integer "charity_id", null: false
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
