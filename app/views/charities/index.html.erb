@@ -1,1 +1,21 @@
-<h2>YEP!!!!</h2>
+<h1>Charities</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Mission</th>
+    <th>Description</th>
+  </tr>
+
+  <% @charities.each do |charity| %>
+    <tr>
+      <td><%= charity.name %></td>
+      <td><%= charity.mission %></td>
+      <td><%= charity.short_desc %></td>
+      <td><%= button_to 'Show', 'charities/' + charity.id.to_s, method: :get %></td>
+      <td><%= button_to 'Delete', 'charities/delete', params: { id: charity.id } %></td>
+    </tr>
+  <% end %>
+</table>
+
+<div><%= button_to "Add Charitiy", 'charities/new', method: :get %></div>

@@ -1,7 +1,7 @@
-<%= form_for @charity, url: {action: "update"}, html: {class: "nifty_form"} do |f| %>
+<%= form_for @charity, url: {action: "create"}, html: {class: "nifty_form"} do |f| %>
   <div><label>Name:</label><%= f.text_field :name %></div>
   <div><label>Mission:</label><%= f.text_field :mission %></div>
   <div><label>Short Description:</label><%= f.text_field :short_desc %></div>
   <div><label>Long Description:</label><%= f.text_area :long_desc %></div>
-  <div><%= f.submit "Update" %></div>
+  <div><%= f.submit "Create" %></div>
 <% end %>
