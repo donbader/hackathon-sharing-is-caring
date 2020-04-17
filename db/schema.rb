@@ -34,13 +34,13 @@ ActiveRecord::Schema.define(version: 2020_04_17_044119) do
   create_table "votes", force: :cascade do |t|
     t.string "contact_no"
     t.decimal "amount", precision: 10, scale: 2
-    t.integer "charity_id_id", null: false
+    t.integer "charity_id", null: false
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["charity_id_id"], name: "index_votes_on_charity_id_id"
+    t.index ["charity_id"], name: "index_votes_on_charity_id"
   end
 
   add_foreign_key "monthly_votes_reports", "charity_ids"
-  add_foreign_key "votes", "charity_ids"
+  add_foreign_key "votes", "charities"
 end

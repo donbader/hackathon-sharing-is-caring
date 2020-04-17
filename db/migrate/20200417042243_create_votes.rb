@@ -3,7 +3,7 @@ class CreateVotes < ActiveRecord::Migration[6.0]
     create_table :votes do |t|
       t.string :contact_no
       t.decimal :amount, precision: 10, scale: 2
-      t.references :charity_id, foreign_key: true, index: true, null: false
+      t.references :charity, foreign_key: true, index: true, null: false
       t.string :status
 
       t.timestamps
