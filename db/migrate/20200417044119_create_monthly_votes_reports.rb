@@ -4,6 +4,7 @@ class CreateMonthlyVotesReports < ActiveRecord::Migration[6.0]
       t.references :charity_id, foreign_key: true, index: true, null: false
       t.integer :votes_count, default: 0
       t.date :report_month
+      t.string :status, null: false
       t.timestamps
     end
   end

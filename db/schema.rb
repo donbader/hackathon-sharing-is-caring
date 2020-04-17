@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2020_04_17_044119) do
     t.integer "charity_id_id", null: false
     t.integer "votes_count", default: 0
     t.date "report_month"
+    t.string "status", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["charity_id_id"], name: "index_monthly_votes_reports_on_charity_id_id"
