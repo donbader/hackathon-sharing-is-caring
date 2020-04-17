@@ -4,7 +4,7 @@ class CharitiesController < ApplicationController
   end
 
   def show
-    charity_id = params[:id]
+    @charity = Charity.find(params[:id])
   end
 
   def update
@@ -16,10 +16,18 @@ class CharitiesController < ApplicationController
       short_desc: params[:charity][:short_desc],
       long_desc: params[:charity][:short_desc],
     )
+
+    redirect_to action: "show", id: charity.id
   end
 
   def delete
     Charity.find(params[:id]).destroy!
+
+    redirect_to action: "index"
+  end
+
+  def new
+    @charity = Charity.new
   end
 
   def create
