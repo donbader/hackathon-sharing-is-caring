@@ -31,13 +31,13 @@ class CharitiesController < ApplicationController
   end
 
   def create
-    charity = Charity.create!(
+    Charity.create!(
       name: params[:charity][:name],
       mission: params[:charity][:mission],
       short_desc: params[:charity][:short_desc],
       long_desc: params[:charity][:short_desc],
     )
 
-    redirect_to action: "show", id: charity.id
+    redirect_to action: "index"
   end
 end

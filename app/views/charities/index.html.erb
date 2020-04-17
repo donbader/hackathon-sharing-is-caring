@@ -12,8 +12,16 @@
       <td><%= charity.name %></td>
       <td><%= charity.mission %></td>
       <td><%= charity.short_desc %></td>
-      <td><%= button_to 'Show', 'charities/' + charity.id.to_s, method: :get %></td>
-      <td><%= button_to 'Delete', 'charities/delete', params: { id: charity.id } %></td>
+      <td><%= button_to 'Show', 'charities/' + charity.id.to_s, method: :get, hidden: true  %></td>
+      <td><%= button_to 'Delete', 'charities/delete', params: { id: charity.id }, hidden: true %></td>
+      <td>
+        <%= form_with url: "/votes", method: "POST" do %>
+          <%= text_field_tag :contact_no, nil, placeholder: "Contact No." %>
+          <%= number_field_tag :amount, 1, step: 1 %>
+          <%= hidden_field_tag :charity_id, charity.id %>
+          <%= submit_tag("Vote") %>
+        <% end %>
+      </td>
     </tr>
   <% end %>
 </table>

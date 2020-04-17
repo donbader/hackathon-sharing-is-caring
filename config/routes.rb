@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   post '/charities/new', to: 'charities#create'
   patch '/charities/:id', to: 'charities#update'
   post '/charities/delete', to: 'charities#delete'
+
+  post '/votes', to: 'votes#create'
 end
