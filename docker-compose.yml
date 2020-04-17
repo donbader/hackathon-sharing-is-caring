@@ -1,20 +1,20 @@
 version: "3.7"
 services:
-    # mysql:
-    #     image: mysql:5
-    #     ports:
-    #         - "3306:3306"
-    #     environment:
-    #         MYSQL_DATABASE: shareiscare
-    #         MYSQL_ROOT_PASSWORD: password
-    #         MYSQL_USER: xfers
-    #         MYSQL_PASSWORD: password
+    mysql:
+        image: mysql:5
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: shareiscare
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_USER: xfers
+            MYSQL_PASSWORD: password
     ruby:
         image: ruby:latest
         ports:
             - "3000:3000"
-        # depends_on:
-        #     - mysql
+        depends_on:
+            - mysql
         volumes: 
             - .:/xfers:cached
             - /xfers/vendor
@@ -38,7 +38,9 @@ services:
                 && gem install bundler \
                 && bundle update --bundler \
                 && time bundle install \
-                && time bundle exec rails db:migrate RAILS_ENV=development \
+                && time bundle exec \
+                    rails db:migrate \
+                    RAILS_ENV=development \
                 && bundle exec rails server -b 0.0.0.0"
     webpacker:
             image: node:12-alpine
