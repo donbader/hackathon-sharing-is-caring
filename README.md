@@ -1,7 +1,7 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+[Notion page](
+https://www.notion.so/xfers/Xfers-Hackathon-Q2-2020-24a60a5a9eb3466c95fb3d7298a59c34?p=1c6dcc99e21d4a34ad2c6f1e36b5934d)
 
 Things you may want to cover:
 
