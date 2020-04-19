@@ -1,23 +1,23 @@
 version: "3.7"
 services:
-    # mysql:
-    #     image: mysql:5
-    #     ports:
-    #         - "3306:3306"
-    #     environment:
-    #         MYSQL_DATABASE: shareiscare
-    #         MYSQL_ROOT_PASSWORD: password
-    #         MYSQL_USER: xfers
-    #         MYSQL_PASSWORD: password
+    mysql:
+        image: mysql:5
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: shareiscare
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_USER: xfers
+            MYSQL_PASSWORD: password
     ruby:
         image: ruby:latest
         ports:
             - "3000:3000"
-        # depends_on:
-        #     - mysql
+        depends_on:
+            - mysql
         volumes: 
             - .:/xfers:cached
-            - /xfers/vendor
+            - my-vendor:/xfers/vendor
         environment:
             DB_HOST: mysql
             DB_PORT: 3306
@@ -35,24 +35,68 @@ services:
                     git \
                     rsync \
                     tzdata \
+                && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+                && apt-get install -y nodejs \
+                && npm install -g \
+                    npm@latest \
+                    yarn \
                 && gem install bundler \
-                && bundle update --bundler \
-                && time bundle install \
-                && bundle exec rails server"
+                && echo '##################################################' \
+                && echo 'Bundle Install' \
+                && time bundle install --deployment --without test \
+                && echo '##################################################' \
+                && echo 'Bundle Rake' \
+                    && time bundle exec \
+                        rake db:drop \
+                            db:create \
+                            db:schema:load \
+                            db:migrate \
+                && cd /xfers \
+                && echo '##################################################' \
+                && echo 'Bundle Rails Server' \
+                && bundle exec rails server -b 0.0.0.0"
     webpacker:
-            image: node:12-alpine
-            ports:
-                - "8080:8080"
-            volumes:
-                - .:/xfers:cached
-            working_dir: /xfers
-            command: >
-                /bin/sh -c "apk --update-cache add \
-                        bash \
-                        ca-certificates \
-                        tzdata \
-                    && npm install -g \
-                        webpack \
-                        webpack-cli \
-                        webpack-dev-server \
-                    && webpack-dev-server"
+        image: ruby:latest
+        ports:
+            - "8080:8080"
+            - "3035:3035"
+        volumes:
+            - .:/xfers:cached
+            - /xfers/vendor
+            - my-node_modules:/xfers/node_modules
+        working_dir: /xfers
+        environment:
+            DB_HOST: mysql
+            DB_PORT: 3306
+            DB_NAME: shareiscare
+            DB_USERNAME: xfers
+            DB_PASSWORD: password
+            RAILS_ENV: development
+        command: >
+            /bin/bash -c "apt-get -qq update \
+                && apt-get -qq -f -y dist-upgrade \
+                && apt-get -qq install \
+                    ca-certificates \
+                    curl \
+                    git \
+                    tzdata \
+                && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+                && apt-get install -y nodejs \
+                && npm install -g \
+                    npm@latest \
+                    webpack \
+                    webpack-cli \
+                    webpack-dev-server \
+                    yarn \
+                && yarn \
+                && gem install bundler \
+                && echo '##################################################' \
+                && echo 'Bundle Install' \
+                && time bundle install --deployment --without test \
+                && echo '##################################################' \
+                && echo 'Webpacker Run' \
+                && /xfers/bin/webpack-dev-server --host 0.0.0.0"
+volumes:
+    my-bin:
+    my-node_modules:
+    my-vendor:
