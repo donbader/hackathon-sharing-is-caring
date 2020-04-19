@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2020_04_17_044119) do
 
-  create_table "charities", force: :cascade do |t|
+  create_table "charities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name"
     t.text "mission"
     t.text "short_desc"
@@ -21,26 +21,26 @@ ActiveRecord::Schema.define(version: 2020_04_17_044119) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "monthly_votes_reports", force: :cascade do |t|
-    t.integer "charity_id_id", null: false
+  create_table "monthly_votes_reports", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "charity_id", null: false
     t.integer "votes_count", default: 0
     t.date "report_month"
     t.string "status", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["charity_id_id"], name: "index_monthly_votes_reports_on_charity_id_id"
+    t.index ["charity_id"], name: "index_monthly_votes_reports_on_charity_id"
   end
 
-  create_table "votes", force: :cascade do |t|
+  create_table "votes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "contact_no"
     t.decimal "amount", precision: 16, scale: 2
-    t.integer "charity_id", null: false
+    t.bigint "charity_id", null: false
     t.string "status"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["charity_id"], name: "index_votes_on_charity_id"
   end
 
-  add_foreign_key "monthly_votes_reports", "charity_ids"
+  add_foreign_key "monthly_votes_reports", "charities"
   add_foreign_key "votes", "charities"
 end
