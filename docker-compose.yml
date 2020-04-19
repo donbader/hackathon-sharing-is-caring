@@ -17,7 +17,7 @@ services:
             - mysql
         volumes: 
             - .:/xfers:cached
-            - my-vendor:/xfers/vendor
+            - my-vendor1:/xfers/vendor
         environment:
             DB_HOST: mysql
             DB_PORT: 3306
@@ -62,7 +62,7 @@ services:
             - "3035:3035"
         volumes:
             - .:/xfers:cached
-            - /xfers/vendor
+            - my-vendor2:/xfers/vendor
             - my-node_modules:/xfers/node_modules
         working_dir: /xfers
         environment:
@@ -97,6 +97,6 @@ services:
                 && echo 'Webpacker Run' \
                 && /xfers/bin/webpack-dev-server --host 0.0.0.0"
 volumes:
-    my-bin:
     my-node_modules:
-    my-vendor:
+    my-vendor1:
+    my-vendor2:
